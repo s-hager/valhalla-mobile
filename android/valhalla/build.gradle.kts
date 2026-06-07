@@ -12,6 +12,7 @@ plugins {
 android {
     namespace = "com.valhalla.valhalla"
     compileSdk = 36
+    buildToolsVersion = "36.1.0"
 
     defaultConfig {
         minSdk = 26
@@ -97,15 +98,12 @@ archs.forEach { arch ->
 
 tasks.named("preBuild") {
     // Efficiently build any architecture that doesn't exist in jniLibs.
-    dependsOn("buildValhallaFor-arm64-v8a")
-    dependsOn("buildValhallaFor-armeabi-v7a")
-    dependsOn("buildValhallaFor-x86_64")
-    dependsOn("buildValhallaFor-x86")
+    dependsOn("buildValhallaFor-x86_64", "buildValhallaFor-arm64-v8a")
 }
 
 mavenPublishing {
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
-    signAllPublications()
+    // signAllPublications()
 
     if (project.version.toString() === "unspecified") {
         throw IllegalArgumentException("Version must be specified")
